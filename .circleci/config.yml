@@ -15,14 +15,12 @@ jobs:
       - run: source venv/bin/activate && pytest
   push-on-dockerhub:
     machine: true
-    environment:
-      LASTEST_SHA1: echo -e $(git rev-list -n 1 origin/develop^1)
     steps:
       - checkout
       - run: echo "$DOCKER_PASSWORD" | docker login --username florianmgs --password-stdin
       - run: docker build --tag florianmgs/${CIRCLE_PROJECT_REPONAME}:${CIRCLE_SHA1} .
       - run: docker push florianmgs/${CIRCLE_PROJECT_REPONAME}:${CIRCLE_SHA1}
-  deploy:
+  deploy-on-heroku:
     executor: heroku/default
     steps:
       - checkout
@@ -39,7 +37,7 @@ workflows:
             branches:
               only:
                 - master
-      - deploy:
+      - deploy-on-heroku:
           requires:
             - push-on-dockerhub
           filters:
