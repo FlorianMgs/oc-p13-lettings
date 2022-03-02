@@ -20,8 +20,8 @@ jobs:
     steps:
       - checkout
       - run: echo "$DOCKER_PASSWORD" | docker login --username florianmgs --password-stdin
-      - run: docker build --tag florianmgs/oc_p13_lettings:${LASTEST_SHA1} .
-      - run: docker push florianmgs/oc_p13_lettings:${LASTEST_SHA1}
+      - run: docker build --tag florianmgs/${CIRCLE_PROJECT_REPONAME}:${CIRCLE_SHA1} .
+      - run: docker push florianmgs/${CIRCLE_PROJECT_REPONAME}:${CIRCLE_SHA1}
   deploy:
     executor: heroku/default
     steps:
