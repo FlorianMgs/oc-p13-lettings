@@ -17,7 +17,7 @@ class TestLettingApp(TestCase):
             last_name="tested",
             email="usertested@email.com"
         )
-        profile = Profile.objects.create(
+        Profile.objects.create(
             user=user,
             favorite_city="Issou"
         )

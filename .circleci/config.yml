@@ -1,0 +1,48 @@
+version: 2.1
+
+orbs:
+  heroku: circleci/heroku@1.2.6
+
+jobs:
+  build-and-test:
+    docker:
+      - image: florianmgs/oc_p13_lettings
+    steps:
+      - checkout
+      - run: python3 -m venv venv
+      - run: source venv/bin/activate && pip install -r requirements.txt
+      - run: source venv/bin/activate && flake8
+      - run: source venv/bin/activate && pytest
+  push-on-dockerhub:
+    machine: true
+    environment:
+      LASTEST_SHA1: echo -e $(git rev-list -n 1 origin/develop^1)
+    steps:
+      - checkout
+      - run: echo "$DOCKER_PASSWORD" | docker login --username florianmgs --password-stdin
+      - run: docker build --tag florianmgs/oc_p13_lettings:${LASTEST_SHA1} .
+      - run: docker push florianmgs/oc_p13_lettings:${LASTEST_SHA1}
+  deploy:
+    executor: heroku/default
+    steps:
+      - checkout
+      - heroku/deploy-via-git
+
+workflows:
+  main:
+    jobs:
+      - build-and-test
+      - push-on-dockerhub:
+          requires:
+            - build-and-test
+          filters:
+            branches:
+              only:
+                - master
+      - deploy:
+          requires:
+            - push-on-dockerhub
+          filters:
+            branches:
+              only:
+                - master

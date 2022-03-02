@@ -1,0 +1,16 @@
+version: "3.3"
+
+services:
+  db:
+    image: nouchka/sqlite3:latest
+    volumes:
+      - ./data/db:/root/db
+    environment:
+      - SQLITE3_DB=oc-lettings-site.sqlite3
+  web:
+    image: oc_p13_lettings:latest
+    command: python manage.py runserver 0.0.0.0:8000
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db

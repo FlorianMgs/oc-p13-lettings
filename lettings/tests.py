@@ -18,7 +18,7 @@ class TestLettingApp(TestCase):
             zip_code=78,
             country_iso_code=249
         )
-        letting = Letting.objects.create(
+        Letting.objects.create(
             title="issou city",
             address=address
         )
