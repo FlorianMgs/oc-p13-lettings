@@ -1,8 +1,5 @@
 version: 2.1
 
-orbs:
-  heroku: circleci/heroku@1.2.6
-
 jobs:
   build-and-test:
     docker:
@@ -13,34 +10,8 @@ jobs:
       - run: source venv/bin/activate && pip install -r requirements.txt
       - run: source venv/bin/activate && flake8
       - run: source venv/bin/activate && pytest
-  push-on-dockerhub:
-    machine: true
-    steps:
-      - checkout
-      - run: echo "$DOCKER_PASSWORD" | docker login --username florianmgs --password-stdin
-      - run: docker build --tag florianmgs/${CIRCLE_PROJECT_REPONAME}:${CIRCLE_SHA1} .
-      - run: docker push florianmgs/${CIRCLE_PROJECT_REPONAME}:${CIRCLE_SHA1}
-  deploy-on-heroku:
-    executor: heroku/default
-    steps:
-      - checkout
-      - heroku/deploy-via-git
 
 workflows:
   main:
     jobs:
       - build-and-test
-      - push-on-dockerhub:
-          requires:
-            - build-and-test
-          filters:
-            branches:
-              only:
-                - master
-      - deploy-on-heroku:
-          requires:
-            - push-on-dockerhub
-          filters:
-            branches:
-              only:
-                - master
