@@ -10,7 +10,7 @@ class TestHomeApp(TestCase):
         path = reverse('home')
         response = self.client.get(path)
         assert response.status_code == 200
-        assertTemplateUsed(response, 'home/indexx.html')
+        assertTemplateUsed(response, 'home/index.html')
 
     def test_home_url(self):
         path = reverse('home')
