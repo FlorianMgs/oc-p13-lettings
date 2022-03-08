@@ -11,7 +11,7 @@ jobs:
           pkg-manager: pip
       - run:
           command: |
-            pytest --version
+            pytest
             flake8
           name: Test
 workflows:
