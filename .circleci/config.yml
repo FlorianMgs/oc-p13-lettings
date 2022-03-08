@@ -1,17 +1,20 @@
 version: 2.1
-
+orbs:
+  python: circleci/python@1.1.0
 jobs:
-  build-and-test:
-    docker:
-      - image: florianmgs/oc_p13_lettings
+  build:
+    executor: python/default
     steps:
       - checkout
-      - run: python3 -m venv venv
-      - run: source venv/bin/activate && pip install -r requirements.txt
-      - run: source venv/bin/activate && flake8
-      - run: source venv/bin/activate && pytest
-
+      - python/install-packages:
+          pip-dependency-file: requirements.txt
+          pkg-manager: pip
+      - run:
+          command: |
+            pytest --version
+            flake8
+          name: Test
 workflows:
   main:
     jobs:
-      - build-and-test
+      - build
