@@ -2,6 +2,7 @@ version: 2.1
 
 orbs:
   heroku: circleci/heroku@1.2.6
+  python: circleci/python@1.1.0
 
 jobs:
   build-and-test:
@@ -11,8 +12,8 @@ jobs:
       - checkout
       - run: python3 -m venv venv
       - run: source venv/bin/activate && pip install -r requirements.txt
-      - run: source venv/bin/activate && flake8
-      - run: source venv/bin/activate && pytest
+      - run: flake8
+      - run: pytest
   push-on-dockerhub:
     machine: true
     steps:
