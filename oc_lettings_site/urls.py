@@ -1,10 +1,6 @@
 from django.contrib import admin
 from django.urls import path, include
-from home.views import index
-
-
-def sentry_debug(request):
-    return 0/2
+from home.views import index, sentry_debug
 
 
 urlpatterns = [
